@@ -25,32 +25,19 @@ namespace SimpleRemote
         {
             InitializeComponent();
 
-
-            var TreeEntries = new ObservableCollection<TreeEntry>();
             Tree.ItemsSource = TreeEntries;
-
-            var G1 = new GroupEntry() { Name = "G1" };
-            var G11 = new GroupEntry() { Name = "G11" };
-            var GM111 = new ConnectionEntry() { Name = "G111" };
-            G11.Members.Add(GM111);
-            G1.Members.Add(G11);
-            TreeEntries.Add(G1);
-
-            var G2 = new GroupEntry() { Name = "G2" };
-            var G21 = new GroupEntry() { Name = "G21", IsExpanded = true };
-            var GM211 = new ConnectionEntry() { Name = "G211" };
-            G21.Members.Add(GM211);
-            var GM212 = new ConnectionEntry() { Name = "G212" };
-            G21.Members.Add(GM212);
-            G2.Members.Add(G21);
-            TreeEntries.Add(G2);
         }
+
+        public void SetTree(ObservableCollection<TreeEntry> Tree) { TreeEntries = Tree; }
+
+        private ObservableCollection<TreeEntry> TreeEntries = new ObservableCollection<TreeEntry>();
     }
 
 
     public class TreeEntry
     {
         public string Name { get; set; } = "";
+
         public bool IsSelected { get; set; } = false;
         public bool IsExpanded { get; set; } = false;
     }

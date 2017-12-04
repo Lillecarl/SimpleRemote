@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SimpleRemote"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="SimpleConnect" Height="350" Width="525">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
@@ -20,11 +20,13 @@
                 <RowDefinition Height="3*" />
             </Grid.RowDefinitions>
 
-            <local:ConnectionTree></local:ConnectionTree>
-            
+            <local:ConnectionTree x:Name="Tree"></local:ConnectionTree>
+             
             <GridSplitter Grid.Row="1" ResizeDirection="Rows" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
             <Grid Grid.Row="2">
-                
+                <DataGrid Name="EntryProperties">
+                    
+                </DataGrid>
             </Grid>
         </Grid>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />

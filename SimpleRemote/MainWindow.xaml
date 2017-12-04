@@ -7,6 +7,31 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="5*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="3*" />
+            </Grid.RowDefinitions>
+
+            <local:ConnectionTree></local:ConnectionTree>
+            
+            <GridSplitter Grid.Row="1" ResizeDirection="Rows" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <Grid Grid.Row="2">
+                
+            </Grid>
+        </Grid>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <TabControl Grid.Column="2">
+            <TabItem Header="TabItem">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

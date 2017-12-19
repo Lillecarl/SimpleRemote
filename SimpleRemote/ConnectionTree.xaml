@@ -9,25 +9,23 @@
     
     <TreeView Name="Tree" AllowDrop="True" ItemsSource="{Binding TreeEntries}">
         <TreeView.Resources>
-            <HierarchicalDataTemplate DataType="{x:Type local:GroupEntry}" ItemsSource="{Binding Members}">
-                <StackPanel Orientation="Horizontal">
+            <HierarchicalDataTemplate DataType="{x:Type local:TreeEntry}" ItemsSource="{Binding Children}">
+                <StackPanel Orientation="Horizontal" AllowDrop="True">
                     <TextBlock Text="{Binding Name}" />
-                    <TextBlock Text=" (" />
-                    <TextBlock Text="{Binding ChildrenCount}" />
-                    <TextBlock Text=")" />
+                    <TextBlock Text="{Binding CountStr}" />
                 </StackPanel>
             </HierarchicalDataTemplate>
-            <DataTemplate DataType="{x:Type local:ConnectionEntry}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Name}" />
-                </StackPanel>
-            </DataTemplate>
         </TreeView.Resources>
 
         <TreeView.ItemContainerStyle>
             <Style TargetType="TreeViewItem">
                 <Setter Property="IsSelected" Value="{Binding IsSelected}" />
                 <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
+                <Setter Property="AllowDrop" Value="True" />
+
+                <EventSetter Event="TreeViewItem.DragOver" Handler="treeView_DragOver"/>
+                <EventSetter Event="TreeViewItem.Drop" Handler="treeView_Drop"/>
+                <EventSetter Event="TreeViewItem.MouseMove" Handler="treeView_MouseMove"/>
             </Style>
         </TreeView.ItemContainerStyle>
     </TreeView>

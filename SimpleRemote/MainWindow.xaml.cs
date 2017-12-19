@@ -25,39 +25,31 @@ namespace SimpleRemote
         public MainWindow()
         {
             InitializeComponent();
+        }
 
-            var worker = new BackgroundWorker();
-            worker.DoWork += (object sender, DoWorkEventArgs e) =>
+        private async void Window_Initialized(object sender, EventArgs e)
+        {
+            Tree.SetTree(await Task.Run(() =>
             {
                 var TreeEntries = new ObservableCollection<TreeEntry>();
-
-                var G1 = new GroupEntry() { Name = "G1" };
-                var G11 = new GroupEntry() { Name = "G11" };
-                var GM111 = new ConnectionEntry() { Name = "G111" };
-                G11.Members.Add(GM111);
-                G1.Members.Add(G11);
+                var G1 = new TreeEntry() { Name = "G1" };
+                var G11 = new TreeEntry() { Name = "G11" };
+                var GM111 = new TreeEntry() { Name = "G111" };
+                G11.Children.Add(GM111);
+                G1.Children.Add(G11);
                 TreeEntries.Add(G1);
 
-                var G2 = new GroupEntry() { Name = "G2" };
-                var G21 = new GroupEntry() { Name = "G21", IsExpanded = true };
-                var GM211 = new ConnectionEntry() { Name = "G211" };
-                G21.Members.Add(GM211);
-                var GM212 = new ConnectionEntry() { Name = "G212" };
-                G21.Members.Add(GM212);
-                G2.Members.Add(G21);
+                var G2 = new TreeEntry() { Name = "G2", IsExpanded = true };
+                var G21 = new TreeEntry() { Name = "G21", IsExpanded = true };
+                var GM211 = new TreeEntry() { Name = "G211" };
+                G21.Children.Add(GM211);
+                var GM212 = new TreeEntry() { Name = "G212" };
+                G21.Children.Add(GM212);
+                G2.Children.Add(G21);
                 TreeEntries.Add(G2);
 
-                e.Result = TreeEntries;
-            };
-
-            worker.RunWorkerCompleted += (object sender, RunWorkerCompletedEventArgs e) =>
-            {
-                var result = e.Result as ObservableCollection<TreeEntry>;
-
-                Tree.SetTree(result);
-            };
-
-            worker.RunWorkerAsync();
+                return TreeEntries;
+            }));
         }
     }
 }

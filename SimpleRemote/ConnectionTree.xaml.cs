@@ -151,7 +151,12 @@ namespace SimpleRemote
         public string Icon { get; set; } = "";
 
         public bool IsSelected { get; set; } = false;
-        public bool IsExpanded { get; set; } = false;
+        private bool _IsExpanded = false;
+        public bool IsExpanded
+        {
+            get { return _IsExpanded; }
+            set { _IsExpanded = value; OnPropertyChanged("IsExpanded"); }
+        }
 
         public string CountStr
         {

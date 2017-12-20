@@ -55,6 +55,7 @@ namespace SimpleRemote
             Point mousePos = e.GetPosition(null);
             Vector diff = startPoint - mousePos;
 
+            // Allow some mouse movement before starting the dragging
             if (e.LeftButton == MouseButtonState.Pressed &&
                 (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
                 Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
@@ -91,24 +92,27 @@ namespace SimpleRemote
 
                 var target = treeviewitem.Header as TreeEntry;
 
-                if (mover.FindEntry(target))
-                {
-                    e.Handled = true;
-                    return;
-                }
-
-                foreach (var i in TreeEntries)
-                    i.RemoveEntry(mover);
-
-                target.IsExpanded = true;
-                target.Children.Add(mover);
-                e.Handled = true;
+                MoveEntry(mover, target, e);
             }
         }
 
-        private void MoveEntry(TreeEntry mover, TreeEntry target)
+        private void MoveEntry(TreeEntry mover, TreeEntry target, DragEventArgs e)
         {
-            
+            if (mover.FindEntry(target))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            target.IsExpanded = true;
+            e.Handled = true;
+
+            TreeEntries.Remove(mover);
+
+            foreach (var i in TreeEntries)
+                i.RemoveEntry(mover);
+
+            target.Children.Add(mover);
         }
 
         #endregion

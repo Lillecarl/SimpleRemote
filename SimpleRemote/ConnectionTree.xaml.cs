@@ -55,8 +55,8 @@ namespace SimpleRemote
             Vector diff = startPoint - mousePos;
 
             if (e.LeftButton == MouseButtonState.Pressed &&
-                Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
-                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
+                (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
             {
                 var treeentry = Tree.SelectedItem;
                 
@@ -88,8 +88,18 @@ namespace SimpleRemote
             {
                 var treeentry = e.Data.GetData("treeentry") as TreeEntry;
                 var target = treeviewitem.Header as TreeEntry;
+
+                foreach (var i in TreeEntries)
+                    i.RemoveEntry(treeentry);
+
+                target.IsExpanded = true;
                 target.Children.Add(treeentry);
             }
+        }
+
+        private void MoveEntry(TreeEntry mover, TreeEntry target)
+        {
+            
         }
 
         #endregion
@@ -105,6 +115,16 @@ namespace SimpleRemote
 
     public class TreeEntry
     {
+        public TreeEntry()
+        {
+            Children.CollectionChanged += Children_CollectionChanged;
+        }
+
+        private void Children_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            CountStr = "";
+        }
+
         public int EntryID = 0;
 
         public string Name { get; set; } = "";
@@ -122,6 +142,10 @@ namespace SimpleRemote
 
                 return "";
             }
+            set
+            {
+
+            }
         }
 
         private int Count
@@ -135,6 +159,14 @@ namespace SimpleRemote
 
                 return count;
             }
+        }
+
+        public void RemoveEntry(TreeEntry entry)
+        {
+            Children.Remove(entry);
+
+            foreach (var child in Children)
+                child.RemoveEntry(entry);
         }
 
         public ObservableCollection<TreeEntry> Children { get; set; } = new ObservableCollection<TreeEntry>();

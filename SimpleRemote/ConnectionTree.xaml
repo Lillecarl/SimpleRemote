@@ -22,7 +22,7 @@
                 <Setter Property="IsSelected" Value="{Binding IsSelected}" />
                 <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
                 <Setter Property="AllowDrop" Value="True" />
-                
+
                 <EventSetter Event="PreviewMouseLeftButtonDown" Handler="TreeViewItem_PreviewMouseLeftButtonDown"/>
                 <EventSetter Event="MouseMove" Handler="TreeViewItem_MouseMove"/>
                 <EventSetter Event="DragEnter" Handler="TreeViewItem_DragEnter"/>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,7 +63,7 @@ namespace SimpleRemote
                 
                 if (treeentry != null)
                 {
-                    DataObject dragData = new DataObject("treeentry", treeentry);
+                    DataObject dragData = new DataObject(treeentry.GetType(), treeentry);
                     DragDrop.DoDragDrop(Tree, dragData, DragDropEffects.Move);
                 }
             }
@@ -70,7 +71,7 @@ namespace SimpleRemote
 
         private void TreeViewItem_DragEnter(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent("treeentry") || sender == e.Source)
+            if (!e.Data.GetDataPresent(typeof(TreeEntry)) || sender == e.Source)
                 e.Effects = DragDropEffects.None;
         }
 
@@ -84,16 +85,24 @@ namespace SimpleRemote
             var treeviewitem = sender as TreeViewItem;
             var itemspresenter = e.Source as ItemsPresenter;;
 
-            if (e.Data.GetDataPresent("treeentry"))
+            if (e.Data.GetDataPresent(typeof(TreeEntry)) && !e.Handled)
             {
-                var treeentry = e.Data.GetData("treeentry") as TreeEntry;
+                var mover = e.Data.GetData(typeof(TreeEntry)) as TreeEntry;
+
                 var target = treeviewitem.Header as TreeEntry;
 
+                if (mover.FindEntry(target))
+                {
+                    e.Handled = true;
+                    return;
+                }
+
                 foreach (var i in TreeEntries)
-                    i.RemoveEntry(treeentry);
+                    i.RemoveEntry(mover);
 
                 target.IsExpanded = true;
-                target.Children.Add(treeentry);
+                target.Children.Add(mover);
+                e.Handled = true;
             }
         }
 
@@ -113,7 +122,7 @@ namespace SimpleRemote
         HTTP,
     }
 
-    public class TreeEntry
+    public class TreeEntry : INotifyPropertyChanged
     {
         public TreeEntry()
         {
@@ -126,6 +135,13 @@ namespace SimpleRemote
         }
 
         public int EntryID = 0;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
 
         public string Name { get; set; } = "";
         public string Icon { get; set; } = "";
@@ -144,7 +160,7 @@ namespace SimpleRemote
             }
             set
             {
-
+                OnPropertyChanged("CountStr");
             }
         }
 
@@ -167,6 +183,18 @@ namespace SimpleRemote
 
             foreach (var child in Children)
                 child.RemoveEntry(entry);
+        }
+
+        public bool FindEntry(TreeEntry entry)
+        {
+            if (Children.Contains(entry))
+                return true;
+
+            foreach (var child in Children)
+                if (child.FindEntry(entry))
+                    return true;
+
+            return false;
         }
 
         public ObservableCollection<TreeEntry> Children { get; set; } = new ObservableCollection<TreeEntry>();

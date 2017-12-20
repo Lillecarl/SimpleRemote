@@ -38,39 +38,61 @@ namespace SimpleRemote
 
         private ObservableCollection<TreeEntry> TreeEntries = new ObservableCollection<TreeEntry>();
 
-        Point _lastMouseDown;
-        TreeEntry draggedItem, _target;
+        #region Dragndrop
 
+        Point startPoint = new Point();
 
-        private void treeView_MouseMove(object sender, MouseEventArgs e)
+        private void TreeViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            try
+            // Store the mouse position
+            startPoint = e.GetPosition(null);
+        }
+
+        private void TreeViewItem_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Get the current mouse position
+            Point mousePos = e.GetPosition(null);
+            Vector diff = startPoint - mousePos;
+
+            if (e.LeftButton == MouseButtonState.Pressed &&
+                Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
             {
-                if (e.LeftButton == MouseButtonState.Pressed)
+                var treeentry = Tree.SelectedItem;
+                
+                if (treeentry != null)
                 {
-                    Point currentPosition = e.GetPosition(Tree);
-
-
-                    if ((Math.Abs(currentPosition.X - _lastMouseDown.X) > 10.0) ||
-                        (Math.Abs(currentPosition.Y - _lastMouseDown.Y) > 10.0))
-                    {
-                        draggedItem = (TreeEntry)Tree.SelectedItem;
-                        if (draggedItem != null)
-                        {
-                            DragDropEffects finalDropEffect = DragDrop.DoDragDrop(Tree, Tree.SelectedValue, DragDropEffects.Move);
-                            //Checking target is not null and item is dragging(moving)
-                            if ((finalDropEffect == DragDropEffects.Move) && (_target != null))
-                            {
-
-                            }
-                        }
-                    }
+                    DataObject dragData = new DataObject("treeentry", treeentry);
+                    DragDrop.DoDragDrop(Tree, dragData, DragDropEffects.Move);
                 }
             }
-            catch (Exception)
+        }
+
+        private void TreeViewItem_DragEnter(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent("treeentry") || sender == e.Source)
+                e.Effects = DragDropEffects.None;
+        }
+
+        private void TreeViewItem_DragLeave(object sender, DragEventArgs e)
+        {
+
+        }
+
+        private void TreeViewItem_Drop(object sender, DragEventArgs e)
+        {
+            var treeviewitem = sender as TreeViewItem;
+            var itemspresenter = e.Source as ItemsPresenter;;
+
+            if (e.Data.GetDataPresent("treeentry"))
             {
+                var treeentry = e.Data.GetData("treeentry") as TreeEntry;
+                var target = treeviewitem.Header as TreeEntry;
+                target.Children.Add(treeentry);
             }
         }
+
+        #endregion
     }
 
     public enum EntryType

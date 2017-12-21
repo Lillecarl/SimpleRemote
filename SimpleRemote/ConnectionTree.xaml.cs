@@ -72,17 +72,23 @@ namespace SimpleRemote
         {
             if (!e.Data.GetDataPresent(typeof(TreeEntry)) || sender == e.Source)
                 e.Effects = DragDropEffects.None;
+            else if (e.OriginalSource is TextBlock)
+                (e.OriginalSource as TextBlock).FontWeight = FontWeights.Bold;
         }
 
         private void TreeViewItem_DragLeave(object sender, DragEventArgs e)
         {
-
+            if (e.OriginalSource is TextBlock)
+                (e.OriginalSource as TextBlock).FontWeight = FontWeights.Normal;
         }
 
         private void TreeViewItem_Drop(object sender, DragEventArgs e)
         {
+            if (e.OriginalSource is TextBlock)
+                (e.OriginalSource as TextBlock).FontWeight = FontWeights.Normal;
+
             var treeviewitem = sender as TreeViewItem;
-            var itemspresenter = e.Source as ItemsPresenter;;
+            var itemspresenter = e.Source as ItemsPresenter;
 
             if (e.Data.GetDataPresent(typeof(TreeEntry)) && !e.Handled)
             {

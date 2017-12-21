@@ -26,18 +26,18 @@ namespace SimpleRemote
         {
             InitializeComponent();
 
-            Tree.ItemsSource = TreeEntries;
+            Tree.ItemsSource = RootEntry.Children;
         }
 
-        public void SetTree(ObservableCollection<TreeEntry> Tree)
+        public void SetTree(TreeEntry Tree)
         {
-            TreeEntries.Clear();
+            RootEntry.Children.Clear();
 
-            foreach (var i in Tree)
-                TreeEntries.Add(i);
+            foreach (var i in Tree.Children)
+                RootEntry.Children.Add(i);
         }
 
-        private ObservableCollection<TreeEntry> TreeEntries = new ObservableCollection<TreeEntry>();
+        private TreeEntry RootEntry = new TreeEntry();
 
         #region Dragndrop
 
@@ -98,7 +98,7 @@ namespace SimpleRemote
 
         private void MoveEntry(TreeEntry mover, TreeEntry target, DragEventArgs e)
         {
-            if (mover.FindEntry(target))
+            if (mover.FindEntry(target) || mover == target)
             {
                 e.Handled = true;
                 return;
@@ -107,10 +107,7 @@ namespace SimpleRemote
             target.IsExpanded = true;
             e.Handled = true;
 
-            TreeEntries.Remove(mover);
-
-            foreach (var i in TreeEntries)
-                i.RemoveEntry(mover);
+            RootEntry.RemoveEntry(mover);
 
             target.Children.Add(mover);
         }
@@ -151,6 +148,7 @@ namespace SimpleRemote
         public string Icon { get; set; } = "";
 
         public bool IsSelected { get; set; } = false;
+
         private bool _IsExpanded = false;
         public bool IsExpanded
         {
@@ -160,17 +158,15 @@ namespace SimpleRemote
 
         public string CountStr
         {
-            get
-            {
-                if (Count > 0)
-                    return string.Format(" ({0})", Count);
+            get { return Count > 0 ? string.Format(" ({0})", Count) : ""; }
+            set { OnPropertyChanged("CountStr"); }
+        }
 
-                return "";
-            }
-            set
-            {
-                OnPropertyChanged("CountStr");
-            }
+        private Visibility _Visibility = Visibility.Visible;
+        public Visibility Visibility
+        {
+            get { return _Visibility; }
+            set { _Visibility = value; OnPropertyChanged("Visibility"); }
         }
 
         private int Count

@@ -14,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CefSharp;
+using CefSharp.Wpf;
 
 namespace SimpleRemote
 {
@@ -52,6 +54,35 @@ namespace SimpleRemote
 
                 return RootEntry;
             }));
+        }
+
+        private void CEF_Click(object sender, RoutedEventArgs e)
+        {
+            var tab = new TabItem();
+            tab.Header = "CEF";
+
+            var control = new ChromiumWebBrowser();
+            tab.Content = control;
+            control.Address = "http://dialectunified.se/admin";
+            control.LoadingStateChanged += CEF_LoadingStateChanged;
+
+            ConnectionTabs.Items.Add(tab);
+            ConnectionTabs.SelectedItem = tab;
+        }
+
+        private void CEF_LoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
+        {
+            var browser = sender as ChromiumWebBrowser;
+            if (browser.CanExecuteJavascriptInMainFrame && !e.IsLoading)
+            {
+                try
+                {
+                    browser.ExecuteScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_UserNameTextBox\").setAttribute(\"value\", \"username\");");
+                    browser.ExecuteScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_PasswordTextBox\").setAttribute(\"value\", \"password\");");
+                    browser.ExecuteScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_LoginButton\").click();");
+                }
+                catch { }
+            }
         }
     }
 }

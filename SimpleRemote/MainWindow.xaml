@@ -18,21 +18,22 @@
                 <RowDefinition Height="5*" />
                 <RowDefinition Height="5" />
                 <RowDefinition Height="3*" />
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <local:ConnectionTree x:Name="Tree"></local:ConnectionTree>
+            <local:ConnectionTree x:Name="Tree"/>
              
             <GridSplitter Grid.Row="1" ResizeDirection="Rows" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
             <Grid Grid.Row="2">
                 <DataGrid Name="EntryProperties">
-                    
+
                 </DataGrid>
             </Grid>
+            <Button Grid.Row="3" Content="Options" Click="CEF_Click"/>
         </Grid>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-        <TabControl Grid.Column="2">
+        <TabControl Grid.Column="2" x:Name="ConnectionTabs">
             <TabItem Header="TabItem">
-                <Grid Background="#FFE5E5E5"/>
             </TabItem>
         </TabControl>
     </Grid>

@@ -35,7 +35,7 @@ namespace SimpleRemote
                 RootEntry.Children.Add(i);
         }
 
-        public TreeEntry RootEntry = new TreeEntry();
+        public TreeEntry RootEntry { get; set; } = new TreeEntry();
 
         #region Dragndrop
 

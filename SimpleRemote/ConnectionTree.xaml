@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
-    <TreeView Name="Tree" AllowDrop="True" ItemsSource="{Binding RootEntry.Children, ElementName=TreeRoot}">
+    <TreeView Name="Tree" AllowDrop="True" DataContext="{Binding ElementName=TreeRoot}" ItemsSource="{Binding RootEntry.Children}">
         <TreeView.Resources>
             <HierarchicalDataTemplate DataType="{x:Type local:TreeEntry}" ItemsSource="{Binding Children}">
                 <StackPanel Orientation="Horizontal" AllowDrop="True">

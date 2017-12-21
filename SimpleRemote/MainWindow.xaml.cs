@@ -45,6 +45,8 @@ namespace SimpleRemote
                 G21.Children.Add(GM211);
                 var GM212 = new TreeEntry() { Name = "G212" };
                 G21.Children.Add(GM212);
+                var GM213 = new TreeEntry() { Name = "G213" };
+                G21.Children.Add(GM213);
                 G2.Children.Add(G21);
                 RootEntry.Children.Add(G2);
 

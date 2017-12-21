@@ -111,17 +111,22 @@ namespace SimpleRemote
             var mover_parent = RootEntry.GetParent(mover);
             var target_parent = RootEntry.GetParent(target);
 
-            Point mousePos = e.GetPosition(e.OriginalSource as FrameworkElement);
+            var mousePos = e.GetPosition(e.OriginalSource as FrameworkElement);
+            var elementHeight = (e.OriginalSource as FrameworkElement).ActualHeight;
             // Reordering
-            if ((mousePos.Y <= 2 || mousePos.Y >= (e.OriginalSource as FrameworkElement).ActualHeight - 2) && mover_parent == target_parent)
+            if (mover_parent == target_parent)
             {
-                bool before = mousePos.Y <= 1;
+                bool before = mousePos.Y <= elementHeight / 3;
+                bool after = mousePos.Y >= elementHeight - elementHeight / 3;
 
-                mover_parent.Children.Remove(mover);
-                mover_parent.Children.Insert(mover_parent.Children.IndexOf(target) + (before ? 0 : 1), mover);
+                if (before || after)
+                {
+                    mover_parent.Children.Remove(mover);
+                    mover_parent.Children.Insert(mover_parent.Children.IndexOf(target) + (before ? 0 : 1), mover);
 
-                e.Handled = true;
-                return;
+                    e.Handled = true;
+                    return;
+                }
             }
 
             // If the target is the parent of the mover, move to the parent of the target instead

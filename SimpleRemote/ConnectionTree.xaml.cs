@@ -25,8 +25,6 @@ namespace SimpleRemote
         public ConnectionTree()
         {
             InitializeComponent();
-
-            Tree.ItemsSource = RootEntry.Children;
         }
 
         public void SetTree(TreeEntry Tree)
@@ -37,7 +35,7 @@ namespace SimpleRemote
                 RootEntry.Children.Add(i);
         }
 
-        private TreeEntry RootEntry = new TreeEntry();
+        public TreeEntry RootEntry = new TreeEntry();
 
         #region Dragndrop
 

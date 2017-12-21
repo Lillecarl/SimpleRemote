@@ -70,16 +70,16 @@ namespace SimpleRemote
             ConnectionTabs.SelectedItem = tab;
         }
 
-        private void CEF_LoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
+        private async void CEF_LoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
         {
             var browser = sender as ChromiumWebBrowser;
             if (browser.CanExecuteJavascriptInMainFrame && !e.IsLoading)
             {
                 try
                 {
-                    browser.ExecuteScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_UserNameTextBox\").setAttribute(\"value\", \"username\");");
-                    browser.ExecuteScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_PasswordTextBox\").setAttribute(\"value\", \"password\");");
-                    browser.ExecuteScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_LoginButton\").click();");
+                    await browser.EvaluateScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_UserNameTextBox\").setAttribute(\"value\", \"username\");");
+                    await browser.EvaluateScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_PasswordTextBox\").setAttribute(\"value\", \"password\");");
+                    await browser.EvaluateScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_LoginButton\").click();");
                 }
                 catch { }
             }

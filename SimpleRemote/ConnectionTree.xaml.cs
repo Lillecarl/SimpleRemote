@@ -108,9 +108,24 @@ namespace SimpleRemote
                 return;
             }
 
-            var parent = RootEntry.GetParent(mover);
+            var mover_parent = RootEntry.GetParent(mover);
+            var target_parent = RootEntry.GetParent(target);
 
-            if (target == parent)
+            Point mousePos = e.GetPosition(e.OriginalSource as FrameworkElement);
+            // Reordering
+            if ((mousePos.Y <= 2 || mousePos.Y >= (e.OriginalSource as FrameworkElement).ActualHeight - 2) && mover_parent == target_parent)
+            {
+                bool before = mousePos.Y <= 1;
+
+                mover_parent.Children.Remove(mover);
+                mover_parent.Children.Insert(mover_parent.Children.IndexOf(target) + (before ? 0 : 1), mover);
+
+                e.Handled = true;
+                return;
+            }
+
+            // If the target is the parent of the mover, move to the parent of the target instead
+            if (target == mover_parent)
                 target = RootEntry.GetParent(target);
 
             target.IsExpanded = true;

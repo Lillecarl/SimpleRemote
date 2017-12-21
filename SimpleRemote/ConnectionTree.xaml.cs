@@ -102,6 +102,11 @@ namespace SimpleRemote
                 return;
             }
 
+            var parent = RootEntry.GetParent(mover);
+
+            if (target == parent)
+                target = RootEntry.GetParent(target);
+
             target.IsExpanded = true;
             e.Handled = true;
 
@@ -198,6 +203,18 @@ namespace SimpleRemote
                     return true;
 
             return false;
+        }
+
+        public TreeEntry GetParent(TreeEntry entry)
+        {
+            if (Children.Contains(entry))
+                return this;
+
+            foreach (var child in Children)
+                if (child.GetParent(entry) != null)
+                    return child.GetParent(entry);
+
+            return null;
         }
 
         public ObservableCollection<TreeEntry> Children { get; set; } = new ObservableCollection<TreeEntry>();

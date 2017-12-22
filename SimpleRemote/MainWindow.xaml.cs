@@ -77,6 +77,7 @@ namespace SimpleRemote
             {
                 try
                 {
+                    await Task.Delay(2500);
                     await browser.EvaluateScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_UserNameTextBox\").setAttribute(\"value\", \"username\");");
                     await browser.EvaluateScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_PasswordTextBox\").setAttribute(\"value\", \"password\");");
                     await browser.EvaluateScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_LoginButton\").click();");

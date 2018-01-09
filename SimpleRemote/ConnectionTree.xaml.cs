@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CefSharp.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -163,9 +164,36 @@ namespace SimpleRemote
                         tab.Content = control;
                         tab.Loaded += Tab_Loaded;
 
+                        tab.DataContext = tab;
+                        tab.ContextMenu = new ContextMenu();
+                        var closebtn = new MenuItem();
+                        closebtn.Header = "Close";
+                        closebtn.Click += Closebtn_Click;
+                        tab.ContextMenu.Items.Add(closebtn);
+
                         mainWindow.ConnectionTabs.Items.Add(tab);
                         mainWindow.ConnectionTabs.SelectedItem = tab;
                     }
+                }
+            }
+        }
+
+        private void Closebtn_Click(object sender, RoutedEventArgs e)
+        {
+            var menuitem = e.Source as MenuItem;
+
+            if (menuitem.DataContext is TabItem)
+            {
+                var tab = menuitem.DataContext as TabItem;
+
+                if (tab.Parent is TabControl)
+                {
+                    var tabcontrol = tab.Parent as TabControl;
+
+                    if (tab.Content is ChromiumWebBrowser)
+                        (tab.Content as ChromiumWebBrowser).Dispose();
+
+                    tabcontrol.Items.Remove(tab);
                 }
             }
         }

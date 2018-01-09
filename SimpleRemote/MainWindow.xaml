@@ -29,11 +29,16 @@
 
                 </DataGrid>
             </Grid>
-            <Button Grid.Row="3" Content="Options" Click="CEF_Click"/>
+            <Button Grid.Row="3" Content="Options"/>
         </Grid>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         <TabControl Grid.Column="2" x:Name="ConnectionTabs">
-            <TabItem Header="TabItem">
+            <TabItem Header="TabItem" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+                <TabItem.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Close" Click="MenuItem_Click"></MenuItem>
+                    </ContextMenu>
+                </TabItem.ContextMenu>
             </TabItem>
         </TabControl>
     </Grid>

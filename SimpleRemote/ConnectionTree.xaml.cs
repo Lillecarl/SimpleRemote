@@ -27,6 +27,8 @@ namespace SimpleRemote
             InitializeComponent();
         }
 
+        public MainWindow mainWindow = null;
+
         public void SetTree(TreeEntry Tree)
         {
             RootEntry.Children.Clear();
@@ -142,6 +144,42 @@ namespace SimpleRemote
         }
 
         #endregion
+
+        private void TreeViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TreeViewItem)
+            {
+                var treeViewItem = sender as TreeViewItem;
+                var treeEntry = treeViewItem.Header as TreeEntry;
+
+                if (treeEntry.config != null)
+                {
+                    var control = treeEntry.config.GetElement();
+                    
+                    if (control != null)
+                    {
+                        var tab = new TabItem();
+                        tab.Header = treeEntry.Name;
+                        tab.Content = control;
+                        tab.Loaded += Tab_Loaded;
+
+                        mainWindow.ConnectionTabs.Items.Add(tab);
+                        mainWindow.ConnectionTabs.SelectedItem = tab;
+                    }
+                }
+            }
+        }
+
+        private void Tab_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is TabItem))
+                return;
+
+            var tabitem = sender as TabItem;
+
+            if (tabitem.Content is Connections.IConnection)
+                (tabitem.Content as Connections.IConnection).Connect();
+        }
     }
 
     public enum EntryType
@@ -164,7 +202,9 @@ namespace SimpleRemote
             CountStr = "";
         }
 
-        public int EntryID = 0;
+        public int entryID = 0;
+        public EntryType entryType = EntryType.FOLDER;
+        public SimpleRemote.Config.IConfigEntry config = null;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

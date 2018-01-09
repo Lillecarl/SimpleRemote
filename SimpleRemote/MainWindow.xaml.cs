@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -27,6 +28,7 @@ namespace SimpleRemote
         public MainWindow()
         {
             InitializeComponent();
+            Tree.mainWindow = this;
         }
 
         private async void Window_Initialized(object sender, EventArgs e)
@@ -45,9 +47,11 @@ namespace SimpleRemote
                 var G21 = new TreeEntry() { Name = "G21", IsExpanded = true };
                 var GM211 = new TreeEntry() { Name = "G211" };
                 G21.Children.Add(GM211);
-                var GM212 = new TreeEntry() { Name = "G212" };
+                var GM212 = new TreeEntry() { Name = "G212 (RDP)" };
+                GM212.config = new Config.RDP();
                 G21.Children.Add(GM212);
-                var GM213 = new TreeEntry() { Name = "G213" };
+                var GM213 = new TreeEntry() { Name = "G213 (WWW)" };
+                GM213.config = new Config.WWW();
                 G21.Children.Add(GM213);
                 G2.Children.Add(G21);
                 RootEntry.Children.Add(G2);
@@ -56,33 +60,23 @@ namespace SimpleRemote
             }));
         }
 
-        private void CEF_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var tab = new TabItem();
-            tab.Header = "CEF";
+            var menuitem = e.Source as MenuItem;
 
-            var control = new ChromiumWebBrowser();
-            tab.Content = control;
-            control.Address = "http://dialectunified.se/admin";
-            control.LoadingStateChanged += CEF_LoadingStateChanged;
-
-            ConnectionTabs.Items.Add(tab);
-            ConnectionTabs.SelectedItem = tab;
-        }
-
-        private async void CEF_LoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
-        {
-            var browser = sender as ChromiumWebBrowser;
-            if (browser.CanExecuteJavascriptInMainFrame && !e.IsLoading)
+            if (menuitem.DataContext is TabItem)
             {
-                try
+                var tab = menuitem.DataContext as TabItem;
+                
+                if (tab.Parent is TabControl)
                 {
-                    await Task.Delay(2500);
-                    await browser.EvaluateScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_UserNameTextBox\").setAttribute(\"value\", \"username\");");
-                    await browser.EvaluateScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_PasswordTextBox\").setAttribute(\"value\", \"password\");");
-                    await browser.EvaluateScriptAsync("document.getElementById(\"ctl00_TheContentPlaceHolder_LoginButton\").click();");
+                    var tabcontrol = tab.Parent as TabControl;
+
+                    if (tab.Content is ChromiumWebBrowser)
+                        (tab.Content as ChromiumWebBrowser).Dispose();
+
+                    tabcontrol.Items.Remove(tab);
                 }
-                catch { }
             }
         }
     }

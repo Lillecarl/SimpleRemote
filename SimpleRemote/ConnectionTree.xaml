@@ -29,6 +29,7 @@
                 <EventSetter Event="DragEnter" Handler="TreeViewItem_DragEnter"/>
                 <EventSetter Event="DragLeave" Handler="TreeViewItem_DragLeave"/>
                 <EventSetter Event="Drop" Handler="TreeViewItem_Drop"/>
+                <EventSetter Event="MouseDoubleClick" Handler="TreeViewItem_MouseDoubleClick" />
             </Style>
         </TreeView.ItemContainerStyle>
     </TreeView>

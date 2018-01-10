@@ -28,11 +28,11 @@
             </Grid.RowDefinitions>
 
             <TreeView x:Name="Tree"
-              ItemsSource="{Binding RootEntry.Children}"
-              dd:DragDrop.IsDragSource="True"
-              dd:DragDrop.IsDropTarget="True"
-              dd:DragDrop.UseDefaultDragAdorner="True"
-              dd:DragDrop.UseDefaultEffectDataTemplate="True">
+                      ItemsSource="{Binding RootEntry.Children}"
+                      dd:DragDrop.IsDragSource="True"
+                      dd:DragDrop.IsDropTarget="True"
+                      dd:DragDrop.UseDefaultDragAdorner="True"
+                      dd:DragDrop.UseDefaultEffectDataTemplate="True">
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type viewModels:TreeEntry}" ItemsSource="{Binding Children}">
                         <StackPanel Orientation="Horizontal">
@@ -61,7 +61,21 @@
             <Button Grid.Row="3" Content="Options"/>
         </Grid>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-        <TabControl Grid.Column="2" x:Name="ConnectionTabs">
+        <TabControl x:Name="ConnectionTabs"
+                    ItemsSource="{Binding Tabs}"
+                    Grid.Column="2"
+                    dd:DragDrop.IsDragSource="True"
+                    dd:DragDrop.IsDropTarget="True">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Header}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentControl Content="{Binding Content}"></ContentControl>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
         </TabControl>
     </Grid>
 </Window>

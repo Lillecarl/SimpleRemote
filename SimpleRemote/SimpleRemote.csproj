@@ -135,10 +135,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Connections\MiniBrowser.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -151,10 +147,8 @@
     <Compile Include="Config\RDP.cs" />
     <Compile Include="Config\WWW.cs" />
     <Compile Include="Connections\IConnection.cs" />
-    <Compile Include="Connections\MiniBrowser.xaml.cs">
-      <DependentUpon>MiniBrowser.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Connections\WinFormHostConnect.cs" />
+    <Compile Include="ViewModels\TabEntry.cs" />
     <Compile Include="ViewModels\TreeEntry.cs" />
     <Compile Include="Connections\MSTSCWrapper.cs">
       <SubType>UserControl</SubType>

@@ -24,9 +24,13 @@ namespace SimpleRemote.Connections
 
         private AxMsRdpClientNotSafeForScripting mstsc = null;
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        private bool Connected = false;
 
         public void Connect()
         {
+            if (Connected)
+                return;
+
             mstsc.Width = Width;
             mstsc.Height = Height;
 
@@ -39,6 +43,7 @@ namespace SimpleRemote.Connections
             mstsc.DesktopHeight = Height;
             mstsc.DesktopWidth = Width;
             mstsc.OnConnected += Mstsc_OnConnected;
+            mstsc.OnDisconnected += Mstsc_OnDisconnected;
             mstsc.Connect();
         }
 
@@ -63,10 +68,16 @@ namespace SimpleRemote.Connections
 
         private void Mstsc_OnConnected(object sender, EventArgs e)
         {
+            Connected = true;
             Invoke((Action)(() =>
             {
                 Refresh();
             }));
+        }
+
+        private void Mstsc_OnDisconnected(object sender, IMsTscAxEvents_OnDisconnectedEvent e)
+        {
+            Connected = false;
         }
 
         private void Mstsc_ResizeReconnect(object sender, IMsTscAxEvents_OnDisconnectedEvent e)

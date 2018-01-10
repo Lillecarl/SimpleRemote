@@ -30,7 +30,11 @@ namespace SimpleRemote
         public MainWindow()
         {
             InitializeComponent();
+            Tabs.CollectionChanged += Tabs_SelectNewTab;
         }
+
+        public TreeEntry RootEntry { get; set; } = new TreeEntry();
+        public ObservableCollection<TabEntry> Tabs { get; set; } = new ObservableCollection<TabEntry>();
 
         private async void Window_Initialized(object sender, EventArgs e)
         {
@@ -61,6 +65,12 @@ namespace SimpleRemote
             }));
         }
 
+        private void Tabs_SelectNewTab(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+                ConnectionTabs.SelectedIndex = e.NewStartingIndex;
+        }
+
         public void SetTree(TreeEntry Tree)
         {
             RootEntry.Children.Clear();
@@ -68,8 +78,6 @@ namespace SimpleRemote
             foreach (var i in Tree.Children)
                 RootEntry.Children.Add(i);
         }
-
-        public TreeEntry RootEntry { get; set; } = new TreeEntry();
 
         private void TreeViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -84,20 +92,13 @@ namespace SimpleRemote
 
                     if (control != null)
                     {
-                        var tab = new TabItem();
-                        tab.Header = treeEntry.Name;
-                        tab.Content = control;
-                        tab.Loaded += Tab_Loaded;
+                        var tabEntry = new TabEntry();
+                        tabEntry.Header = treeEntry.Name;
+                        tabEntry.Content = control;
+                        Tabs.Add(tabEntry);
 
-                        tab.DataContext = tab;
-                        tab.ContextMenu = new ContextMenu();
-                        var closebtn = new MenuItem();
-                        closebtn.Header = "Close";
-                        closebtn.Click += Closebtn_Click;
-                        tab.ContextMenu.Items.Add(closebtn);
-
-                        ConnectionTabs.Items.Add(tab);
-                        ConnectionTabs.SelectedItem = tab;
+                        if (tabEntry.Content is Connections.IConnection)
+                            (tabEntry.Content as Connections.IConnection).Connect();
                     }
                 }
             }
@@ -121,17 +122,6 @@ namespace SimpleRemote
                     tabcontrol.Items.Remove(tab);
                 }
             }
-        }
-
-        private void Tab_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (!(sender is TabItem))
-                return;
-
-            var tabitem = sender as TabItem;
-
-            if (tabitem.Content is Connections.IConnection)
-                (tabitem.Content as Connections.IConnection).Connect();
         }
     }
 }

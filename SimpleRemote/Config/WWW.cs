@@ -1,4 +1,5 @@
-﻿using CefSharp.Wpf;
+﻿using CefSharp;
+using CefSharp.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,10 @@ namespace SimpleRemote.Config
         public FrameworkElement GetElement()
         {
             var browser = new ChromiumWebBrowser();
-            browser.Address = "http://dialectunified.se/admin";
+            browser.Address = "https://google.com";
             browser.LoadingStateChanged += LoadingStateChanged;
 
-            RenderOptions.SetBitmapScalingMode(browser, BitmapScalingMode.HighQuality);
+            //RenderOptions.SetBitmapScalingMode(browser, BitmapScalingMode.HighQuality);
 
             return browser;
         }

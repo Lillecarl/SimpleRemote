@@ -16,7 +16,6 @@ namespace SimpleRemote.Config
             formsHost.HorizontalAlignment = HorizontalAlignment.Stretch;
             formsHost.VerticalAlignment = VerticalAlignment.Stretch;
             var mstscWrapper = new Connections.MSTSCWrapper();
-            //mstscWrapper.Anchor = (System.Windows.Forms.AnchorStyles)15;
 
             formsHost.Child = mstscWrapper;
 

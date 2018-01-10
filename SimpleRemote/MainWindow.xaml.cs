@@ -59,25 +59,5 @@ namespace SimpleRemote
                 return RootEntry;
             }));
         }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            var menuitem = e.Source as MenuItem;
-
-            if (menuitem.DataContext is TabItem)
-            {
-                var tab = menuitem.DataContext as TabItem;
-                
-                if (tab.Parent is TabControl)
-                {
-                    var tabcontrol = tab.Parent as TabControl;
-
-                    if (tab.Content is ChromiumWebBrowser)
-                        (tab.Content as ChromiumWebBrowser).Dispose();
-
-                    tabcontrol.Items.Remove(tab);
-                }
-            }
-        }
     }
 }

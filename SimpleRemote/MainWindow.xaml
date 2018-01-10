@@ -33,13 +33,6 @@
         </Grid>
         <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         <TabControl Grid.Column="2" x:Name="ConnectionTabs">
-            <TabItem Header="TabItem" DataContext="{Binding RelativeSource={RelativeSource Self}}">
-                <TabItem.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Close" Click="MenuItem_Click"></MenuItem>
-                    </ContextMenu>
-                </TabItem.ContextMenu>
-            </TabItem>
         </TabControl>
     </Grid>
 </Window>

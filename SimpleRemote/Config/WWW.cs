@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace SimpleRemote.Config
 {
@@ -16,6 +17,8 @@ namespace SimpleRemote.Config
             var browser = new ChromiumWebBrowser();
             browser.Address = "http://dialectunified.se/admin";
             browser.LoadingStateChanged += LoadingStateChanged;
+
+            RenderOptions.SetBitmapScalingMode(browser, BitmapScalingMode.HighQuality);
 
             return browser;
         }

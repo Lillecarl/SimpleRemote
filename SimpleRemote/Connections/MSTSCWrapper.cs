@@ -21,6 +21,8 @@ namespace SimpleRemote.Connections
             Controls.Add(mstsc);
         }
 
+        Task reconnector = null;
+
         private AxMsRdpClientNotSafeForScripting mstsc;
 
         public void Connect()
@@ -36,13 +38,49 @@ namespace SimpleRemote.Connections
             mstsc.AdvancedSettings2.SmartSizing = true;
             mstsc.DesktopHeight = Height;
             mstsc.DesktopWidth = Width;
+
+            mstsc.OnConnected += Mstsc_OnConnected;
             mstsc.Connect();
+        }
+
+        private void Mstsc_OnConnected(object sender, EventArgs e)
+        {
+            Invoke((Action)(() =>
+            {
+                Refresh();
+            }));
         }
 
         private void MSTSCWrapper_Resize(object sender, EventArgs e)
         {
             mstsc.Height = Height;
             mstsc.Width = Width;
+
+            if (reconnector == null)
+            {
+                reconnector = new Task(async () =>
+                {
+                    await Task.Delay(5000);
+                    mstsc.OnDisconnected += Mstsc_OnDisconnected;
+                    mstsc.Disconnect();
+                    reconnector = null;
+                });
+
+                reconnector.Start();
+            }
+        }
+
+        private void Mstsc_OnDisconnected(object sender, IMsTscAxEvents_OnDisconnectedEvent e)
+        {
+            Invoke((Action)(() =>
+            {
+                Controls.Remove(mstsc);
+                mstsc = new AxMsRdpClientNotSafeForScripting();
+                Controls.Add(mstsc);
+                Connect();
+            }));
+            mstsc.OnDisconnected -= Mstsc_OnDisconnected;
+            
         }
     }
 }

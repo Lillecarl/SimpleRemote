@@ -18,6 +18,8 @@ using System.Windows.Shapes;
 using CefSharp;
 using CefSharp.Wpf;
 
+using SimpleRemote.ViewModels;
+
 namespace SimpleRemote
 {
     /// <summary>
@@ -28,12 +30,11 @@ namespace SimpleRemote
         public MainWindow()
         {
             InitializeComponent();
-            Tree.mainWindow = this;
         }
 
         private async void Window_Initialized(object sender, EventArgs e)
         {
-            Tree.SetTree(await Task.Run(() =>
+            SetTree(await Task.Run(() =>
             {
                 var RootEntry = new TreeEntry();
                 var G1 = new TreeEntry() { Name = "G1" };
@@ -58,6 +59,79 @@ namespace SimpleRemote
 
                 return RootEntry;
             }));
+        }
+
+        public void SetTree(TreeEntry Tree)
+        {
+            RootEntry.Children.Clear();
+
+            foreach (var i in Tree.Children)
+                RootEntry.Children.Add(i);
+        }
+
+        public TreeEntry RootEntry { get; set; } = new TreeEntry();
+
+        private void TreeViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TreeViewItem)
+            {
+                var treeViewItem = sender as TreeViewItem;
+                var treeEntry = treeViewItem.Header as TreeEntry;
+
+                if (treeEntry.config != null)
+                {
+                    var control = treeEntry.config.GetElement();
+
+                    if (control != null)
+                    {
+                        var tab = new TabItem();
+                        tab.Header = treeEntry.Name;
+                        tab.Content = control;
+                        tab.Loaded += Tab_Loaded;
+
+                        tab.DataContext = tab;
+                        tab.ContextMenu = new ContextMenu();
+                        var closebtn = new MenuItem();
+                        closebtn.Header = "Close";
+                        closebtn.Click += Closebtn_Click;
+                        tab.ContextMenu.Items.Add(closebtn);
+
+                        ConnectionTabs.Items.Add(tab);
+                        ConnectionTabs.SelectedItem = tab;
+                    }
+                }
+            }
+        }
+
+        private void Closebtn_Click(object sender, RoutedEventArgs e)
+        {
+            var menuitem = e.Source as MenuItem;
+
+            if (menuitem.DataContext is TabItem)
+            {
+                var tab = menuitem.DataContext as TabItem;
+
+                if (tab.Parent is TabControl)
+                {
+                    var tabcontrol = tab.Parent as TabControl;
+
+                    if (tab.Content is ChromiumWebBrowser)
+                        (tab.Content as ChromiumWebBrowser).Dispose();
+
+                    tabcontrol.Items.Remove(tab);
+                }
+            }
+        }
+
+        private void Tab_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is TabItem))
+                return;
+
+            var tabitem = sender as TabItem;
+
+            if (tabitem.Content is Connections.IConnection)
+                (tabitem.Content as Connections.IConnection).Connect();
         }
     }
 }

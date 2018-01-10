@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MSTSCLib;
@@ -21,9 +22,8 @@ namespace SimpleRemote.Connections
             Controls.Add(mstsc);
         }
 
-        Task reconnector = null;
-
-        private AxMsRdpClientNotSafeForScripting mstsc;
+        private AxMsRdpClientNotSafeForScripting mstsc = null;
+        private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         public void Connect()
         {
@@ -38,9 +38,27 @@ namespace SimpleRemote.Connections
             mstsc.AdvancedSettings2.SmartSizing = true;
             mstsc.DesktopHeight = Height;
             mstsc.DesktopWidth = Width;
-
             mstsc.OnConnected += Mstsc_OnConnected;
             mstsc.Connect();
+        }
+
+        private void MSTSCWrapper_Resize(object sender, EventArgs e)
+        {
+            cancellationTokenSource.Cancel();
+            cancellationTokenSource = new CancellationTokenSource();
+
+            mstsc.Height = Height;
+            mstsc.Width = Width;
+
+            Task.Run(async () =>
+            {
+                await Task.Delay(1000, cancellationTokenSource.Token);
+
+                cancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                mstsc.OnDisconnected += Mstsc_ResizeReconnect;
+                mstsc.Disconnect();
+            }, cancellationTokenSource.Token);
         }
 
         private void Mstsc_OnConnected(object sender, EventArgs e)
@@ -51,36 +69,16 @@ namespace SimpleRemote.Connections
             }));
         }
 
-        private void MSTSCWrapper_Resize(object sender, EventArgs e)
-        {
-            mstsc.Height = Height;
-            mstsc.Width = Width;
-
-            if (reconnector == null)
-            {
-                reconnector = new Task(async () =>
-                {
-                    await Task.Delay(5000);
-                    mstsc.OnDisconnected += Mstsc_OnDisconnected;
-                    mstsc.Disconnect();
-                    reconnector = null;
-                });
-
-                reconnector.Start();
-            }
-        }
-
-        private void Mstsc_OnDisconnected(object sender, IMsTscAxEvents_OnDisconnectedEvent e)
+        private void Mstsc_ResizeReconnect(object sender, IMsTscAxEvents_OnDisconnectedEvent e)
         {
             Invoke((Action)(() =>
             {
                 Controls.Remove(mstsc);
+                mstsc.Dispose();
                 mstsc = new AxMsRdpClientNotSafeForScripting();
                 Controls.Add(mstsc);
                 Connect();
             }));
-            mstsc.OnDisconnected -= Mstsc_OnDisconnected;
-            
         }
     }
 }

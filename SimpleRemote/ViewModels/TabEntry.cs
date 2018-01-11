@@ -10,6 +10,7 @@ namespace SimpleRemote.ViewModels
     public class TabEntry
     {
         public string Header { get; set; }
+        public string Name { get { return Header; } set { Header = value; } } // Fix bind warning
         public FrameworkElement Content { get; set; }
     }
 }

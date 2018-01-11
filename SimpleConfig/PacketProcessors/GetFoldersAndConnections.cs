@@ -15,7 +15,7 @@ namespace SimpleConfig.PacketProcessors
             return GetType().Name;
         }
 
-        public object ProcessPacket(string packet)
+        public object ProcessPacket(object sender, string packet)
         {
             var foldersAndConnections = new SendFoldersAndConnections();
 

@@ -9,6 +9,6 @@ namespace SimpleShared.Packets
     public interface IPacketProcessor
     {
         string GetName();
-        object ProcessPacket(string packet);
+        object ProcessPacket(object sender, string packet);
     }
 }

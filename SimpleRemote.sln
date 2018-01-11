@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleRemote", "SimpleRemote\SimpleRemote.csproj", "{6D3DDA8D-2EA8-475A-86AD-4A7A889DF36C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E0E88B1C-9FB5-4A3D-8341-B3A290E8BA0A} = {E0E88B1C-9FB5-4A3D-8341-B3A290E8BA0A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleConfig", "SimpleConfig\SimpleConfig.csproj", "{E0E88B1C-9FB5-4A3D-8341-B3A290E8BA0A}"
 EndProject

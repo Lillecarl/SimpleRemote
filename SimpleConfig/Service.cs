@@ -86,7 +86,7 @@ namespace SimpleConfig
 
             try
             {
-                reply = new PacketDelegator().DelegateMessage(value);
+                reply = new PacketDelegator().DelegateMessage(this, value);
             }
             catch (DelegatorException ex)
             {

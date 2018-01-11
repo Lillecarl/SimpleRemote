@@ -29,14 +29,14 @@ namespace SimpleShared.PacketHandling
 
     public class PacketDelegator
     {
-        public string DelegateMessage(string message)
+        public string DelegateMessage(object sender, string message)
         {
             object replyobject = new object();
             var basemessage = JsonConvert.DeserializeObject<SimplePacket>(message);
 
             try
             {
-                replyobject = processors[basemessage.opcode].ProcessPacket(basemessage.data);
+                replyobject = processors[basemessage.opcode].ProcessPacket(sender, basemessage.data);
             }
             catch
             {

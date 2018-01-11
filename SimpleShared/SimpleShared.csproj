@@ -46,7 +46,6 @@
     <Compile Include="Config\RDP.cs" />
     <Compile Include="Config\WWW.cs" />
     <Compile Include="IConfigEntry.cs" />
-    <Compile Include="PacketHandling\GetFoldersAndConnections.cs" />
     <Compile Include="Packets\GetFoldersAndConnections.cs" />
     <Compile Include="Packets\IPacketProcessor.cs" />
     <Compile Include="PacketHandling\PacketDelegator.cs" />

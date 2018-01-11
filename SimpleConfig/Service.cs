@@ -96,11 +96,7 @@ namespace SimpleConfig
             }
 
             if (!string.IsNullOrEmpty(reply))
-            {
-                Console.WriteLine("Sending reply");
-                Console.WriteLine(reply);
                 session.Send(reply);
-            }
         }
     }
 }

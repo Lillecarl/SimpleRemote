@@ -68,13 +68,16 @@ namespace SimpleRemote
 
         private void Websocket_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            var G1 = new TreeEntry();
-            var C1 = new RDP();
-            C1.EntryID = 1;
-            C1.ParentID = 0;
-            C1.Name = "G1";
-            G1.Config = C1;
-            RootEntry.Children.Add(G1);
+            Dispatcher.Invoke(() =>
+            {
+                var G1 = new TreeEntry();
+                var C1 = new RDP();
+                C1.EntryID = 1;
+                C1.ParentID = 0;
+                C1.Name = "G1";
+                G1.Config = C1;
+                RootEntry.Children.Add(G1);
+            });
         }
 
         private void Websocket_Opened(object sender, EventArgs e)

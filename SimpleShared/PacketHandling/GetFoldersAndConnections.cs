@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimpleShared.Packets
+namespace SimplePackets.PacketHandling
 {
-    public class GetFoldersAndConnections
+    class GetFoldersAndConnections
     {
+
     }
 }

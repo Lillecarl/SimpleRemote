@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace SimpleShared.Packets
 {
-    public class GetFoldersAndConnections
+    public class SendFoldersAndConnections
     {
+        public List<IConfigEntry> configentries { get; set; } = new List<IConfigEntry>();
     }
 }

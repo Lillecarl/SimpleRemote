@@ -31,9 +31,19 @@ namespace SimpleRemote.ViewModels
             CountStr = "";
 
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
                 foreach (var i in e.NewItems)
+                {
                     if (i is TreeEntry)
-                        (i as TreeEntry).Config.ParentID = Config.EntryID;
+                    {
+                        try
+                        {
+                            (i as TreeEntry).Config.ParentID = Config.EntryID;
+                        }
+                        catch { }
+                    }
+                }
+            }
         }
 
         public IConfigEntry Config = null;

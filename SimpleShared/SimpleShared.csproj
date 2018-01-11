@@ -7,8 +7,8 @@
     <ProjectGuid>{2F8A778D-414F-4A07-A838-59CDB61B202B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimplePackets</RootNamespace>
-    <AssemblyName>SimplePackets</AssemblyName>
+    <RootNamespace>SimpleShared</RootNamespace>
+    <AssemblyName>SimpleShared</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -46,7 +46,11 @@
     <Compile Include="Config\RDP.cs" />
     <Compile Include="Config\WWW.cs" />
     <Compile Include="IConfigEntry.cs" />
+    <Compile Include="PacketHandling\GetFoldersAndConnections.cs" />
     <Compile Include="Packets\GetFoldersAndConnections.cs" />
+    <Compile Include="Packets\IPacketProcessor.cs" />
+    <Compile Include="PacketHandling\PacketDelegator.cs" />
+    <Compile Include="Packets\SendFoldersAndConnections.cs" />
     <Compile Include="Packets\SimplePacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

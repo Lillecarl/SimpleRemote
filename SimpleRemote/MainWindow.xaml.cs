@@ -17,10 +17,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CefSharp;
 using CefSharp.Wpf;
+using WebSocket4Net;
 
 using SimpleShared.Config;
 
 using SimpleRemote.ViewModels;
+using System.Diagnostics;
 
 namespace SimpleRemote
 {
@@ -37,9 +39,17 @@ namespace SimpleRemote
 
         public TreeEntry RootEntry { get; set; } = new TreeEntry();
         public ObservableCollection<TabEntry> Tabs { get; set; } = new ObservableCollection<TabEntry>();
+        private WebSocket websocket = null;
 
         private async void Window_Initialized(object sender, EventArgs e)
         {
+            System.Diagnostics.Process.Start(@"SimpleConfig.exe");
+
+            websocket = new WebSocket("ws://127.0.0.1:2012/");
+            websocket.EnableAutoSendPing = true;
+            websocket.Opened += Websocket_Opened;
+            websocket.Open();
+
             SetTree(await Task.Run(() =>
             {
                 var RootEntry = new TreeEntry();
@@ -65,6 +75,11 @@ namespace SimpleRemote
 
                 return RootEntry;
             }));
+        }
+
+        private void Websocket_Opened(object sender, EventArgs e)
+        {
+            
         }
 
         private void Tabs_SelectNewTab(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

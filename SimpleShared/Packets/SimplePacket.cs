@@ -13,5 +13,10 @@ namespace SimpleShared.Packets
         public string opcode { get; private set; }
         [JsonProperty]
         public string data { get; private set; }
+
+        SimplePacket(object package)
+        {
+            data = JsonConvert.SerializeObject(package);
+        }
     }
 }

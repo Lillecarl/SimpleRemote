@@ -10,5 +10,6 @@ namespace SimpleShared
     {
         int EntryID { get; set; }
         int ParentID { get; set; }
+        string Name { get; set; }
     }
 }

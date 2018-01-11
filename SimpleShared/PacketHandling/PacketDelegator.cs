@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
-using SimpleShared;
 using SimpleShared.Packets;
 
-using SimpleConfig.MessageProcessors;
 
-namespace SimpleConfig
+namespace SimpleShared.PacketHandling
 {
     [Serializable]
     public class DelegatorException : Exception
@@ -29,7 +27,7 @@ namespace SimpleConfig
         { }
     }
 
-    class PacketDelegator
+    public class PacketDelegator
     {
         public string DelegateMessage(string message)
         {

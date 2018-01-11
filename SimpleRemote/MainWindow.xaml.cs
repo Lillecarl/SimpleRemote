@@ -18,6 +18,8 @@ using System.Windows.Shapes;
 using CefSharp;
 using CefSharp.Wpf;
 
+using SimpleShared.Config;
+
 using SimpleRemote.ViewModels;
 
 namespace SimpleRemote
@@ -53,10 +55,10 @@ namespace SimpleRemote
                 var GM211 = new TreeEntry() { Name = "G211" };
                 G21.Children.Add(GM211);
                 var GM212 = new TreeEntry() { Name = "G212 (RDP)" };
-                GM212.config = new Config.RDP();
+                GM212.Config = new RDP();
                 G21.Children.Add(GM212);
                 var GM213 = new TreeEntry() { Name = "G213 (WWW)" };
-                GM213.config = new Config.WWW();
+                GM213.Config = new WWW();
                 G21.Children.Add(GM213);
                 G2.Children.Add(G21);
                 RootEntry.Children.Add(G2);
@@ -86,20 +88,20 @@ namespace SimpleRemote
                 var treeViewItem = sender as TreeViewItem;
                 var treeEntry = treeViewItem.Header as TreeEntry;
 
-                if (treeEntry.config != null)
+                if (treeEntry.Config != null)
                 {
-                    var control = treeEntry.config.GetElement();
-
-                    if (control != null)
-                    {
-                        var tabEntry = new TabEntry();
-                        tabEntry.Header = treeEntry.Name;
-                        tabEntry.Content = control;
-                        Tabs.Add(tabEntry);
-
-                        if (tabEntry.Content is Connections.IConnection)
-                            (tabEntry.Content as Connections.IConnection).Connect();
-                    }
+                    //var control = treeEntry.config.GetElement();
+                    //
+                    //if (control != null)
+                    //{
+                    //    var tabEntry = new TabEntry();
+                    //    tabEntry.Header = treeEntry.Name;
+                    //    tabEntry.Content = control;
+                    //    Tabs.Add(tabEntry);
+                    //
+                    //    if (tabEntry.Content is Connections.IConnection)
+                    //        (tabEntry.Content as Connections.IConnection).Connect();
+                    //}
                 }
             }
         }

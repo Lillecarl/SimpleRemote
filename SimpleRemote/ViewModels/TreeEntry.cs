@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
+using SimpleShared;
+
 namespace SimpleRemote.ViewModels
 {
     public enum EntryType
@@ -27,11 +29,14 @@ namespace SimpleRemote.ViewModels
         private void Children_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             CountStr = "";
+
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+                foreach (var i in e.NewItems)
+                    if (i is TreeEntry)
+                        (i as TreeEntry).Config.ParentID = Config.EntryID;
         }
 
-        public int entryID = 0;
-        public EntryType entryType = EntryType.FOLDER;
-        public SimpleRemote.Config.IConfigEntry config = null;
+        public IConfigEntry Config = null;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

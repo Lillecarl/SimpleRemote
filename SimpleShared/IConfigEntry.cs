@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimpleRemote.Config
+namespace SimpleShared
 {
     public interface IConfigEntry
     {
-        System.Windows.FrameworkElement GetElement();
+        int EntryID { get; set; }
+        int ParentID { get; set; }
     }
 }

@@ -31,32 +31,31 @@ namespace SimpleShared.PacketHandling
     {
         public string DelegateMessage(string message)
         {
-            object responseobject = new object();
+            object replyobject = new object();
             var basemessage = JsonConvert.DeserializeObject<SimplePacket>(message);
 
             try
             {
-                responseobject = processors[basemessage.opcode].ProcessPacket(basemessage.data);
+                replyobject = processors[basemessage.opcode].ProcessPacket(basemessage.data);
             }
             catch
             {
                 throw new DelegatorException("Unable to find message processor");
             }
 
-            string response = JsonConvert.SerializeObject(responseobject);
+            string reply = JsonConvert.SerializeObject(replyobject);
 
-            return response;
+            return reply;
         }
 
         public static void Init()
         {
-            var instances = from t in Assembly.GetExecutingAssembly().GetTypes()
+            var instances = from t in Assembly.GetEntryAssembly().GetTypes()
                               where t.GetInterfaces().Contains(typeof(IPacketProcessor)) && t.GetConstructor(Type.EmptyTypes) != null
                               select Activator.CreateInstance(t) as IPacketProcessor;
 
             foreach (var i in instances)
                 processors.Add(i.GetName(), i);
-
         }
 
         private static Dictionary<string, IPacketProcessor> processors = new Dictionary<string, IPacketProcessor>();

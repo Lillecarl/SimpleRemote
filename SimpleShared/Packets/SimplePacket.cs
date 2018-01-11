@@ -14,9 +14,22 @@ namespace SimpleShared.Packets
         [JsonProperty]
         public string data { get; private set; }
 
-        SimplePacket(object package)
+        public SimplePacket() { } // This exists only for Json.net
+
+        public SimplePacket(object package)
         {
+            opcode = package.GetType().Name;
             data = JsonConvert.SerializeObject(package);
+        }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+
+        public static implicit operator string (SimplePacket packet)
+        {
+            return packet.ToString();
         }
     }
 }

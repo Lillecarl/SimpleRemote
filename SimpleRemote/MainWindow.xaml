@@ -36,7 +36,7 @@
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type viewModels:TreeEntry}" ItemsSource="{Binding Children}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Name}" />
+                            <TextBlock Text="{Binding Config.Name}" />
                             <TextBlock Text="{Binding CountStr}" />
                         </StackPanel>
                     </HierarchicalDataTemplate>

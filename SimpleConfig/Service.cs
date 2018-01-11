@@ -26,6 +26,8 @@ namespace SimpleConfig
             appServer.SessionClosed += AppServer_SessionClosed;
             appServer.NewMessageReceived += AppServer_NewMessageReceived;
 
+            PacketDelegator.Init();
+
             if (!appServer.Setup(2012))
                 return false;
 
@@ -49,8 +51,6 @@ namespace SimpleConfig
 
             if (newdatabase)
                 new DatabaseCreator().CreateDatabase(dbConnection);
-
-            PacketDelegator.Init();
 
             return true;
         }
@@ -81,12 +81,25 @@ namespace SimpleConfig
 
         private void AppServer_NewMessageReceived(WebSocketSession session, string value)
         {
+            Console.WriteLine("New packet received");
+            var reply = "";
+
             try
             {
-                new PacketDelegator().DelegateMessage(value);
+                reply = new PacketDelegator().DelegateMessage(value);
             }
-            catch (DelegatorException)
+            catch (DelegatorException ex)
             {
+                Console.WriteLine(ex);
+                Console.WriteLine("Packet:");
+                Console.WriteLine(value);
+            }
+
+            if (!string.IsNullOrEmpty(reply))
+            {
+                Console.WriteLine("Sending reply");
+                Console.WriteLine(reply);
+                session.Send(reply);
             }
         }
     }

@@ -46,7 +46,7 @@ namespace SimpleRemote.ViewModels
             }
         }
 
-        public IConfigEntry Config = null;
+        public IConfigEntry Config { get; set; } = null;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
